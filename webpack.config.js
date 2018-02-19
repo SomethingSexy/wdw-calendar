@@ -6,8 +6,8 @@ const webpack = require('webpack');
 
 const plugins = [
   new HtmlWebpackPlugin({
-    template: './demo/index.ejs',
-    filename: '../../index.html'
+    template: './src/index.ejs',
+    filename: '../index.html'
   }),
   new ExtractTextPlugin({
     filename: 'style.css',
@@ -18,7 +18,7 @@ const plugins = [
 
 module.exports = {
   entry: [
-    './demo/demo.tsx'
+    './src/index.tsx'
   ],
   output: {
     path: path.resolve(__dirname, 'public'),
