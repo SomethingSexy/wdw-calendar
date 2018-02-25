@@ -28,7 +28,7 @@
   "dependencies": {
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
-    "react-planner": "github:SomethingSexy/react-planner#v0.0.8",
+    "react-planner": "github:SomethingSexy/react-planner#v0.0.9",
     "uuid": "^3.2.1"
   },
   "devDependencies": {

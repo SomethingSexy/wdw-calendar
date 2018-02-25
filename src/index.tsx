@@ -12,7 +12,11 @@ const plans = [
 class App extends PureComponent {
   public render() {
     return (
-      <Planner days={7} interval="30m" plans={plans} />
+      <div>
+        <h1>WDW Calendar</h1>
+        <p>Double click a plan to edit.</p>
+        <Planner days={7} interval="30m" plans={plans} />
+      </div>
     );
   }
 }
