@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 import ReactDOM from 'react-dom';
-import Planner from 'react-planner';
+import { Planner } from 'react-planner';
+import './test.css';
 // import uuid from 'uuid';
 
 // const plans = [
@@ -10,15 +11,34 @@ import Planner from 'react-planner';
 // ];
 
 const dateStart = '02/01/2018';
-class App extends PureComponent {
+
+export interface IPlannerState {
+  plans: any;
+}
+
+class App extends PureComponent<{}, IPlannerState> {
+  constructor(props: any) {
+    super(props);
+    this.state = { plans: [] };
+  }
   public render() {
     return (
       <div>
         <h1>WDW Calendar</h1>
         <p>Double click a plan to edit.</p>
-        <Planner days={7} interval="30m" plans={[]} dateStart={dateStart} />
+        <Planner
+          days={7}
+          interval="30m"
+          plans={this.state.plans}
+          dateStart={dateStart}
+          onUpdatePlans={this.handleUpdatePlans}
+        />
       </div>
     );
+  }
+
+  private handleUpdatePlans = (plans: any) => {
+    this.setState({ plans });
   }
 }
 
