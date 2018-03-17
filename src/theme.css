@@ -1,3 +1,6 @@
+@import "~@fortawesome/fontawesome/styles.css";
+@import "~bulma/css/bulma.css";
+
 /* Settings */
 :root {
   /* --offset: 2rem; */
@@ -39,6 +42,8 @@ html {
 }
 
 /* This works pretty well for columns but rows need some work
+   For rows, might try a background image on the left column that would overflow?
+*/
 /* .react-grid-layout.layout::before {
   position: absolute;
   top: 0; right: 0; bottom: 0; left: 0;

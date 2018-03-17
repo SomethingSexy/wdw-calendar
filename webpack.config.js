@@ -26,11 +26,7 @@ module.exports = {
     filename: '[hash].bundle.js'
   },
   resolve: {
-    unsafeCache: true,
-    modules: [path.resolve(__dirname, 'node_modules'), 'node_modules']
-  },
-  resolveLoader: {
-    modules: [path.resolve(__dirname, 'node_modules'), 'node_modules']
+    extensions: ['.ts', '.tsx', '.js', '.jsx']
   },
   plugins,
   // Enable this if you want to generate source maps for the Panda client
@@ -52,7 +48,7 @@ module.exports = {
       }
     }, {
       test: /\.tsx?$/,
-      loader: 'ts-loader'
+      loader: 'ts-loader',
     }, {
       test: /\.css$/,
       use: ExtractTextPlugin.extract({
