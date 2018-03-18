@@ -32,6 +32,8 @@
     "@fortawesome/react-fontawesome": "^0.1.0-3",
     "bloomer": "^0.6.3",
     "bulma": "^0.6.2",
+    "lodash": "^4.17.5",
+    "moment": "^2.21.0",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "react-planner": "github:SomethingSexy/react-planner#v0.0.12",
@@ -39,6 +41,7 @@
   },
   "devDependencies": {
     "@types/invariant": "^2.2.29",
+    "@types/lodash": "^4.14.105",
     "@types/prop-types": "^15.5.2",
     "@types/react": "^16.0.34",
     "@types/react-dom": "^16.0.3",
