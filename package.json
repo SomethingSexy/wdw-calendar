@@ -5,8 +5,8 @@
   "description": "",
   "main": "modules/index.js",
   "scripts": {
-    "build": "tsc --outDir ./modules",
     "build:demo": "rimraf public&&webpack",
+    "build:data": "ts-node ./scripts/data.ts",
     "postversion": "git push && git push --tags",
     "test": "echo \"Error: no test specified\" && exit 1",
     "version": "npm run build && git add -A modules"
@@ -49,9 +49,11 @@
     "compression-webpack-plugin": "^1.1.6",
     "css-loader": "^0.28.9",
     "extract-text-webpack-plugin": "^3.0.2",
+    "fs-extra": "^5.0.0",
     "html-webpack-plugin": "^2.30.1",
     "style-loader": "^0.20.2",
     "ts-loader": "^3.2.0",
+    "ts-node": "^5.0.0",
     "tslint": "^5.9.1",
     "tslint-config-airbnb": "^5.4.2",
     "tslint-config-standard": "^7.0.0",
@@ -59,6 +61,7 @@
     "tslint-loader": "^3.5.3",
     "tslint-react": "^3.4.0",
     "typescript": "^2.6.2",
+    "wdw-data": "github:SomethingSexy/wdw-data#v0.0.5",
     "webpack": "^3.10.0"
   }
 }
