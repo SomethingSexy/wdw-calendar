@@ -1,4 +1,21 @@
-import { Column, Columns, Container, Hero, HeroBody, HeroHeader, Title } from 'bloomer';
+import {
+  Button,
+  Column,
+  Columns,
+  Container,
+  Delete,
+  Hero,
+  HeroBody,
+  HeroHeader,
+  Modal,
+  ModalBackground,
+  ModalCard,
+  ModalCardBody,
+  ModalCardFooter,
+  ModalCardHeader,
+  ModalCardTitle,
+  Title
+} from 'bloomer';
 import React, { Fragment, PureComponent } from 'react';
 import { Planner } from 'react-planner';
 import SetttingsMenu from './Settings';
@@ -26,8 +43,8 @@ class Application extends PureComponent<{}, IPlannerState> {
             <Title tag="h1">WDW Calendar</Title>
           </Container>
         </HeroHeader>
-        <HeroBody>
-          <Container>
+        <HeroBody style={{ paddingLeft: 0 }}>
+          <Container style={{ margin: 0 }}>
             {this.canRenderPlanner() && this.renderPlanner()}
             {!this.canRenderPlanner() && this.renderStart()}
           </Container>
@@ -82,9 +99,10 @@ class Application extends PureComponent<{}, IPlannerState> {
             <p>Double click a plan to edit.</p>
             <Planner
               dateStart={this.state.settings.dateStart}
-              days={7}
+              days={this.state.settings.days}
               interval="30m"
               plans={this.state.plans}
+              renderModal={this.renderModal}
               renderPlanEdit={this.renderPlanEdit}
               onUpdatePlans={this.handleUpdatePlans}
             />
@@ -104,6 +122,27 @@ class Application extends PureComponent<{}, IPlannerState> {
 
   private handleUpdatePlans = (plans: any) => {
     this.setState({ plans });
+  }
+
+  private renderModal = ({}, isOpen: boolean) => {
+    return (
+      <Modal isActive={isOpen}>
+        <ModalBackground />
+        <ModalCard>
+          <ModalCardHeader>
+            <ModalCardTitle>ModalCard Title</ModalCardTitle>
+            <Delete />
+          </ModalCardHeader>
+          <ModalCardBody>
+              {/* Your Content  */}
+          </ModalCardBody>
+          <ModalCardFooter>
+            <Button isColor="success">Save</Button>
+            <Button isColor="warning">Cancel</Button>
+          </ModalCardFooter>
+        </ModalCard>
+      </Modal>
+    );
   }
 
   private renderPlanEdit = () => {

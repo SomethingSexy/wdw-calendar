@@ -1,11 +1,15 @@
 import '@fortawesome/fontawesome-free-solid';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Button, Control, Field, Input, Label, Title } from 'bloomer';
+import { Button, Control, Field, Input, Label, Select, Title } from 'bloomer';
 import { omit } from 'lodash';
 import * as moment from 'moment';
 import React, { PureComponent } from 'react';
+import NativeDate from './components/NativeDate';
 
 interface IProps {
+  dateStart?: string;
+  days?: string;
+  interval?: string;
   open?: boolean;
   onChangeSettings: (settings: {}) => void;
   onToggle: () => void;
@@ -17,10 +21,12 @@ interface IState {
   settings: {
     dateStart?: string;
     days?: string;
+    interval?: string;
   };
   errors: {
     dateStart?: string;
     days?: string;
+    interval?: string;
   };
 }
 
@@ -29,6 +35,8 @@ const normalizeEvent = (event: any) => {
 
   return { name, value };
 };
+
+const intervals = ['15m', '30m', '60m'];
 
 /**
  *
@@ -43,7 +51,11 @@ class SetttingsMenu extends PureComponent<IProps, IState> {
     this.state = {
       collapsed: !props.open || false, // default false
       // storing here to handle error handling
-      settings: {},
+      settings: {
+        dateStart: props.dateStart || '',
+        days: props.days || '',
+        interval: props.interval || '30m'
+      },
       errors: {}
     };
   }
@@ -73,11 +85,12 @@ class SetttingsMenu extends PureComponent<IProps, IState> {
         <Field>
           <Label>Start Date</Label>
           <Control>
-            <Input
-              isColor={this.state.errors.dateStart ? 'danger' : undefined}
+            <NativeDate
+              // isColor={this.state.errors.dateStart ? 'danger' : undefined}
+              format="MM/DD/YYYY"
               name="dateStart"
               onChange={this.handleChangeDate}
-              type="date"
+              value={this.state.settings.dateStart}
             />
           </Control>
         </Field>
@@ -91,7 +104,16 @@ class SetttingsMenu extends PureComponent<IProps, IState> {
               name="days"
               onChange={this.handleChangeDays}
               type="number"
+              value={this.state.settings.days}
             />
+          </Control>
+        </Field>
+        <Field>
+          <Label>Interval</Label>
+          <Control>
+            <Select onChange={this.handleChangeInterval} value={this.state.settings.interval}>
+              {this.renderIntervals()}
+            </Select>
           </Control>
         </Field>
         <Field isGrouped>
@@ -108,8 +130,7 @@ class SetttingsMenu extends PureComponent<IProps, IState> {
       settings: {
         ...this.state.settings,
         [name]: value
-      },
-      errors: omit(this.state.errors, [name])
+      }
     });
   }
 
@@ -122,13 +143,19 @@ class SetttingsMenu extends PureComponent<IProps, IState> {
     });
   }
 
-  private handleChangeDate = (event: any) => {
-    const { name, value } = normalizeEvent(event);
+  private removeError(name: string) {
+    this.setState({
+      errors: omit(this.state.errors, [name])
+    });
+  }
+
+  private handleChangeDate = (name: string, value: string) => {
     const date = moment(value, 'YYYY-MM-DD');
 
     if (!date.isValid()) {
       this.setError(name, 'Valid date is required.');
-      return;
+    } else {
+      this.removeError(name);
     }
 
     this.setSetting(name, date.format('MM-DD-YYYY'));
@@ -138,17 +165,18 @@ class SetttingsMenu extends PureComponent<IProps, IState> {
     const { name, value } = normalizeEvent(event);
     const days = Number.parseInt(value);
 
-    if (Number.isNaN(days)) {
-      this.setError(name, 'Days is required.');
-      return;
+    if (Number.isNaN(days) || (days <= 0 || days > 15)) {
+      this.setError(name, 'Days is required and must be between 1 and 14.');
+    } else {
+      this.removeError(name);
     }
 
-    if (days <= 0 || days > 15) {
-      this.setError(name, 'Days must be between 1 and 14.');
-      return;
-    }
+    this.setSetting(name, days || '');
+  }
 
-    this.setSetting(name, days);
+  private handleChangeInterval = (event: any) => {
+    const { name, value } = normalizeEvent(event);
+    this.setSetting(name, value);
   }
 
   private handleSubmit = () => {
@@ -159,6 +187,10 @@ class SetttingsMenu extends PureComponent<IProps, IState> {
 
   private handleOnToggle = () => {
     this.props.onToggle();
+  }
+
+  private renderIntervals() {
+    return intervals.map(interval => <option key={interval} value={interval}>{interval}</option>);
   }
 }
 
