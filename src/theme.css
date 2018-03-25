@@ -1,6 +1,10 @@
 @import "~@fortawesome/fontawesome/styles.css";
 @import "~bulma/css/bulma.css";
 
+div[tabindex="-1"]:focus {
+  outline: 0;
+}
+
 /* Settings */
 :root {
   /* --offset: 2rem; */

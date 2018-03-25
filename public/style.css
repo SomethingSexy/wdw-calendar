@@ -11128,7 +11128,11 @@ label.panel-block:hover {
 .footer {
   background-color: whitesmoke;
   padding: 3rem 1.5rem 6rem;
-}/* Settings */
+}div[tabindex="-1"]:focus {
+  outline: 0;
+}
+
+/* Settings */
 :root {
   /* --offset: 2rem; */
   --offset: 0;

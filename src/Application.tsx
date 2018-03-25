@@ -96,7 +96,7 @@ class Application extends PureComponent<{}, IPlannerState> {
             />
           </Column>
           <Column isSize={rightSize}>
-            <p>Double click a plan to edit.</p>
+            <p>Click a plan to select. Double click a plan to edit.</p>
             <Planner
               dateStart={this.state.settings.dateStart}
               days={this.state.settings.days}
@@ -124,7 +124,7 @@ class Application extends PureComponent<{}, IPlannerState> {
     this.setState({ plans });
   }
 
-  private renderModal = ({}, isOpen: boolean) => {
+  private renderModal = (plan: {}, renderPlanEdit: any, isOpen: boolean) => {
     return (
       <Modal isActive={isOpen}>
         <ModalBackground />
@@ -134,7 +134,7 @@ class Application extends PureComponent<{}, IPlannerState> {
             <Delete />
           </ModalCardHeader>
           <ModalCardBody>
-              {/* Your Content  */}
+            {renderPlanEdit(plan)}
           </ModalCardBody>
           <ModalCardFooter>
             <Button isColor="success">Save</Button>
