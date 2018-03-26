@@ -18,9 +18,10 @@ import {
 } from 'bloomer';
 import React, { Fragment, PureComponent } from 'react';
 import { Planner } from 'react-planner';
+import EditPlan from './components/EditPlan';
 import SetttingsMenu from './Settings';
 
-// const dateStart = '02/01/2018';
+const helpText = 'Click a plan to select. Use left, down, up, and right to move the selected plan.  Use delete or backspace to remove. Double click a plan to edit'; // tslint:disable-line
 
 export interface IPlannerState {
   menuOpen: boolean;
@@ -96,7 +97,7 @@ class Application extends PureComponent<{}, IPlannerState> {
             />
           </Column>
           <Column isSize={rightSize}>
-            <p>Click a plan to select. Double click a plan to edit.</p>
+            <p>{helpText}</p>
             <Planner
               dateStart={this.state.settings.dateStart}
               days={this.state.settings.days}
@@ -130,7 +131,7 @@ class Application extends PureComponent<{}, IPlannerState> {
         <ModalBackground />
         <ModalCard>
           <ModalCardHeader>
-            <ModalCardTitle>ModalCard Title</ModalCardTitle>
+            <ModalCardTitle>Edit Plan</ModalCardTitle>
             <Delete />
           </ModalCardHeader>
           <ModalCardBody>
