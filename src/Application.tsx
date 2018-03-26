@@ -146,8 +146,8 @@ class Application extends PureComponent<{}, IPlannerState> {
     );
   }
 
-  private renderPlanEdit = () => {
-    return <div>balls</div>;
+  private renderPlanEdit = (plan: any) => {
+    return <EditPlan plan={plan} />;
   }
 }
 
