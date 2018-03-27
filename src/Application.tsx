@@ -21,7 +21,7 @@ import { Planner } from 'react-planner';
 import EditPlan from './components/EditPlan';
 import SetttingsMenu from './Settings';
 
-const helpText = 'Click a plan to select. Use left, down, up, and right to move the selected plan.  Use delete or backspace to remove. Double click a plan to edit'; // tslint:disable-line
+const helpText = 'Double click to add a plan.  Click a plan to select. Use left, down, up, and right to move the selected plan.  Use delete or backspace to remove.'; // tslint:disable-line
 
 export interface IPlannerState {
   menuOpen: boolean;
@@ -125,7 +125,8 @@ class Application extends PureComponent<{}, IPlannerState> {
     this.setState({ plans });
   }
 
-  private renderModal = (plan: {}, renderPlanEdit: any, isOpen: boolean) => {
+  private renderModal = (plan: {}, options: any, isOpen: boolean) => {
+    const { renderPlanEdit, onClose } = options;
     return (
       <Modal isActive={isOpen}>
         <ModalBackground />
@@ -139,7 +140,7 @@ class Application extends PureComponent<{}, IPlannerState> {
           </ModalCardBody>
           <ModalCardFooter>
             <Button isColor="success">Save</Button>
-            <Button isColor="warning">Cancel</Button>
+            <Button isColor="warning" onClick={onClose}>Cancel</Button>
           </ModalCardFooter>
         </ModalCard>
       </Modal>
