@@ -5,6 +5,7 @@ import { omit } from 'lodash';
 import * as moment from 'moment';
 import React, { PureComponent } from 'react';
 import NativeDate from './components/NativeDate';
+import { normalizeEvent } from './utils';
 
 interface IProps {
   dateStart?: string;
@@ -29,12 +30,6 @@ interface IState {
     interval?: string;
   };
 }
-
-const normalizeEvent = (event: any) => {
-  const { name, value } = event.target;
-
-  return { name, value };
-};
 
 const intervals = ['15m', '30m', '60m'];
 

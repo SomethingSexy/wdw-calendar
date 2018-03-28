@@ -21,7 +21,11 @@ import { Planner } from 'react-planner';
 import EditPlan from './components/EditPlan';
 import SetttingsMenu from './Settings';
 
-const helpText = 'Double click to add a plan.  Click a plan to select. Use left, down, up, and right to move the selected plan.  Use delete or backspace to remove.'; // tslint:disable-line
+const helpText = `Double click to add a plan.
+  Single click a plan to select it.
+  Use left, down, up, and right to move the selected plan.
+  Use delete or backspace to remove.
+  Drag and drop to move plans between dates and time.`;
 
 export interface IPlannerState {
   menuOpen: boolean;
@@ -133,7 +137,7 @@ class Application extends PureComponent<{}, IPlannerState> {
         <ModalCard>
           <ModalCardHeader>
             <ModalCardTitle>Edit Plan</ModalCardTitle>
-            <Delete />
+            <Delete onClick={onClose} />
           </ModalCardHeader>
           <ModalCardBody>
             {renderPlanEdit(plan)}

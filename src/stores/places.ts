@@ -12,32 +12,59 @@ query PlacesQuery {
 `;
 
 // TODO: This should come from wdw-data
-interface IPlan {
+interface IPlace {
   name: string;
+  type: string;
+  search: string;
 }
 
 class PlacesStore {
   @observable public isLoading = false;
-  @observable public places = [];
+  @observable public all: IPlace[] = [];
+  @observable public list: IPlace[] = [];
+  @observable public loaded = false;
+  @observable public selectedFilter = 'all';
 
   @action
   public async fetch() {
-    this.places = [];
+    if (this.loaded) {
+      return;
+    }
+
+    this.list = [];
+    this.all = [];
     this.isLoading = true;
     try {
       const places = await api(query);
       const sorted = places.data.places
-        .sort(((a: IPlan, b: IPlan) => a.name.localeCompare(b.name)));
+        .sort(((a: IPlace, b: IPlace) => a.name.localeCompare(b.name)))
+        .map((place: IPlace) => ({
+          ...place,
+          search: place.name.toLowerCase()
+        }));
       // after await, modifying state again, needs an actions:
       runInAction(() => {
         this.isLoading = false;
-        this.places = sorted;
+        this.loaded = true;
+        this.list = sorted;
+        this.all = [...sorted];
       });
     } catch (error) {
       runInAction(() => {
         this.isLoading = false;
       });
     }
+  }
+
+  @action
+  public filter(type: string) {
+    this.list = type === 'all' ? [...this.all] : this.all.filter(place => place.type === type);
+    this.selectedFilter = type;
+  }
+
+  @action
+  public search(term: string) {
+    this.list = this.all.filter(place => place.search.includes(term));
   }
 }
 
