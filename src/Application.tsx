@@ -16,7 +16,9 @@ import {
   ModalCardTitle,
   Title
 } from 'bloomer';
-import React, { Fragment, PureComponent } from 'react';
+import { toJS } from 'mobx';
+import { inject, observer } from 'mobx-react';
+import React, { Component, Fragment } from 'react';
 import { Planner } from 'react-planner';
 import EditPlan from './components/EditPlan';
 import SetttingsMenu from './Settings';
@@ -27,17 +29,22 @@ const helpText = `Double click to add a plan.
   Use delete or backspace to remove.
   Drag and drop to move plans between dates and time.`;
 
-export interface IPlannerState {
+export interface IState {
   menuOpen: boolean;
-  plans: any;
   settings: { [key: string]: string; };
 }
 
-class Application extends PureComponent<{}, IPlannerState> {
-  constructor(props: any) {
+export interface IProps {
+  plans?: any;
+}
+
+@inject('plans')
+@observer
+class Application extends Component<IProps, IState> {
+  constructor(props: IProps) {
     super(props);
     // TODO: Move settings out of here and into mobx
-    this.state = { plans: [], menuOpen: false, settings: {} };
+    this.state = { menuOpen: false, settings: {} };
   }
 
   public render() {
@@ -85,10 +92,11 @@ class Application extends PureComponent<{}, IPlannerState> {
   }
 
   private renderPlanner() {
+    const { plans } = this.props;
     const { menuOpen } = this.state;
     const leftSize = menuOpen ? 2 : 1;
     const rightSize = menuOpen ? 10 : 11;
-
+    const list = toJS(plans.list);
     return (
       <Fragment>
         <Columns>
@@ -106,7 +114,7 @@ class Application extends PureComponent<{}, IPlannerState> {
               dateStart={this.state.settings.dateStart}
               days={this.state.settings.days}
               interval="30m"
-              plans={this.state.plans}
+              plans={list}
               renderModal={this.renderModal}
               renderPlanEdit={this.renderPlanEdit}
               onUpdatePlans={this.handleUpdatePlans}
@@ -126,7 +134,7 @@ class Application extends PureComponent<{}, IPlannerState> {
   }
 
   private handleUpdatePlans = (plans: any) => {
-    this.setState({ plans });
+    this.props.plans.updateAll(plans);
   }
 
   private renderModal = (plan: {}, options: any, isOpen: boolean) => {
