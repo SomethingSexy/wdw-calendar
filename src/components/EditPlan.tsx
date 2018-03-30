@@ -3,7 +3,7 @@ import '@fortawesome/fontawesome-free-brands';
 import { Content, Control, Field, Label } from 'bloomer';
 import { inject, observer } from 'mobx-react';
 import React, { Component } from 'react';
-import FindPlan from './FindPlan';
+import FindPlace from './FindPlace';
 import NativeDate from './NativeDate';
 
 // TODO: get types here
@@ -45,7 +45,7 @@ class EditPlan extends Component<IProps> {
         <Field>
           <Label>Plan</Label>
           <Control>
-            {!plan.planId && <FindPlan onSelect={this.handleSelectPlan} />}
+            {!plan.planId && <FindPlace onSelect={this.handleSelectPlan} />}
             {plan.planId && <Content>{plan.planId}</Content>}
           </Control>
         </Field>

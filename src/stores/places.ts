@@ -1,22 +1,44 @@
 import { action, observable, runInAction } from 'mobx';
 import { api } from 'wdw-data';
 
-const query = `
+// TODO: This should come from wdw-data
+interface IPlace {
+  name: string;
+  type: string;
+  search: string;
+  location: string;
+}
+
+interface ILocation {
+  name: string;
+  id: string;
+  areas: string[];
+}
+
+const placesQuery = `
 query PlacesQuery {
   places {
     id,
+    location,
     name,
     type
   }
 }
 `;
 
-// TODO: This should come from wdw-data
-interface IPlace {
-  name: string;
-  type: string;
-  search: string;
+const locationsQuery = `
+query LocationsQuery {
+  locations {
+    id,
+    name,
+    areas
+  }
 }
+`;
+
+const findLocation = (locations: ILocation[], id: string) => {
+  return locations.find((location: ILocation) => location.id === id);
+};
 
 class PlacesStore {
   @observable public isLoading = false;
@@ -35,11 +57,13 @@ class PlacesStore {
     this.all = [];
     this.isLoading = true;
     try {
-      const places = await api(query);
+      const places = await api(placesQuery);
+      const locations = await api(locationsQuery);
       const sorted = places.data.places
         .sort(((a: IPlace, b: IPlace) => a.name.localeCompare(b.name)))
         .map((place: IPlace) => ({
           ...place,
+          location: findLocation(locations.data.locations,  place.location),
           search: place.name.toLowerCase()
         }));
       // after await, modifying state again, needs an actions:
