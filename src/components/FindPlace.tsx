@@ -75,6 +75,7 @@ class FindPlace extends Component<IProps> {
         <PanelBlock
           key={place.id}
           onClick={() => this.handleSelect(place.id)} // tslint:disable-line
+          style={{ cursor: 'pointer' }}
         >
           <PlaceItem {...place} />
         </PanelBlock>

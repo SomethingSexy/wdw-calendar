@@ -1,8 +1,14 @@
 import { action, observable, runInAction } from 'mobx';
 import { api } from 'wdw-data';
 
+export interface IPlacesStore {
+  all: IPlace[];
+  findById: (id: string) => IPlace | undefined;
+}
+
 // TODO: This should come from wdw-data
 interface IPlace {
+  id: string;
   name: string;
   type: string;
   search: string;
@@ -40,7 +46,7 @@ const findLocation = (locations: ILocation[], id: string) => {
   return locations.find((location: ILocation) => location.id === id);
 };
 
-class PlacesStore {
+class PlacesStore implements IPlacesStore {
   @observable public isLoading = false;
   @observable public all: IPlace[] = [];
   @observable public list: IPlace[] = [];
@@ -78,6 +84,11 @@ class PlacesStore {
         this.isLoading = false;
       });
     }
+  }
+
+  @action
+  public findById(id: string) {
+    return this.all.find(place => place.id === id);
   }
 
   @action

@@ -1,10 +1,11 @@
 import '@fortawesome/fontawesome-free-brands';
 // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Content, Control, Field, Label } from 'bloomer';
+import { Control, Field, Label } from 'bloomer';
 import { inject, observer } from 'mobx-react';
 import React, { Component } from 'react';
 import FindPlace from './FindPlace';
 import NativeDate from './NativeDate';
+import Placeitem from './PlaceItem';
 
 // TODO: get types here
 export interface IProps {
@@ -28,6 +29,8 @@ class EditPlan extends Component<IProps> {
       return <div>Loading...</div>;
     }
 
+    const place = plan.activity;
+
     return (
       <div>
         <Field>
@@ -45,8 +48,8 @@ class EditPlan extends Component<IProps> {
         <Field>
           <Label>Plan</Label>
           <Control>
-            {!plan.planId && <FindPlace onSelect={this.handleSelectPlan} />}
-            {plan.planId && <Content>{plan.planId}</Content>}
+            {!place && <FindPlace onSelect={this.handleSelectPlan} />}
+            {place && <Placeitem {...place} />}
           </Control>
         </Field>
       </div>
@@ -58,10 +61,7 @@ class EditPlan extends Component<IProps> {
   }
 
   private handleSelectPlan = (id: string) => {
-    this.props.plans.update({
-      ...this.props.plan,
-      planId: id
-    });
+    this.props.plans.updatePlanActivity(this.props.plan.id, id);
   }
 }
 

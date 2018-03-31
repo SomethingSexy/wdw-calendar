@@ -21,6 +21,7 @@ import { inject, observer } from 'mobx-react';
 import React, { Component, Fragment } from 'react';
 import { Planner } from 'react-planner';
 import EditPlan from './components/EditPlan';
+import Plan from './components/Plan';
 import SetttingsMenu from './Settings';
 
 const helpText = `Double click to add a plan.
@@ -113,9 +114,11 @@ class Application extends Component<IProps, IState> {
             <Planner
               dateStart={this.state.settings.dateStart}
               days={this.state.settings.days}
+              defaultPlanInterval={1}
               interval="30m"
               plans={list}
               renderModal={this.renderModal}
+              renderPlan={this.renderPlan}
               renderPlanEdit={this.renderPlanEdit}
               onUpdatePlans={this.handleUpdatePlans}
             />
@@ -157,6 +160,10 @@ class Application extends Component<IProps, IState> {
         </ModalCard>
       </Modal>
     );
+  }
+
+  private renderPlan = (plan: any) => {
+    return <Plan {...plan} />;
   }
 
   private renderPlanEdit = (plan: any) => {

@@ -1,7 +1,13 @@
-import PlacesStore from './places';
-import PlansStore from './plans';
+import Places from './places';
+import Plans from './plans';
 
-export default () => ({
-  places: new PlacesStore(),
-  plans: new PlansStore()
-});
+export default () => {
+  const places = new Places();
+  // plans gets access to places
+  const plans = new Plans(places);
+
+  return {
+    places,
+    plans
+  };
+};
