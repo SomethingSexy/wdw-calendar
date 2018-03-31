@@ -1,15 +1,19 @@
 import '@fortawesome/fontawesome-free-brands';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-// import { Level, LevelItem, LevelLeft, LevelRight, Tag } from 'bloomer';
+import { Level, LevelItem, LevelLeft, LevelRight } from 'bloomer';
 import React, { StatelessComponent } from 'react';
+import PlanText from './PlanText';
+import Tooltip from './Tooltip';
 
 interface IProps {
   id: string;
   activity: {
     id: string;
+    name: string;
     type: string;
   };
   timeRange: string;
+  expanded: boolean;
 }
 
 const getIcon = (type: string) => {
@@ -28,12 +32,28 @@ const getIcon = (type: string) => {
   return <FontAwesomeIcon icon="building" />;
 };
 
-const Plan: StatelessComponent<IProps> = ({ activity, timeRange }) => {
+const renderActivity = (activity: any) => {
+  if (activity) {
+    return <Tooltip isPosition="right" text={activity.name}>{getIcon(activity.type)}</Tooltip>;
+  }
+};
 
+const Plan: StatelessComponent<IProps> = ({ activity, expanded, timeRange }) => {
   return (
     <>
-      <p>{timeRange}</p>
-      <p>{activity && getIcon(activity.type)}</p>
+    <Level style={{ marginBottom: '0px', paddingLeft: '5px', paddingRight: '5px' }}>
+      <LevelLeft>
+        <LevelItem>
+          {renderActivity(activity)}
+        </LevelItem>
+      </LevelLeft>
+      <LevelRight>
+        <LevelItem>
+          <Tooltip isPosition="left" text={timeRange}><FontAwesomeIcon icon="clock" /></Tooltip>
+        </LevelItem>
+      </LevelRight>
+    </Level>
+    {expanded && activity && <PlanText hasTextAlign="centered">{activity.name}</PlanText>}
     </>
   );
 };

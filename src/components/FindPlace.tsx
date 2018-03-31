@@ -1,7 +1,15 @@
 import '@fortawesome/fontawesome-free-brands';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-  Control, Input, Panel, PanelBlock, PanelHeading, PanelTab, PanelTabs
+  Control,
+  Input,
+  PageControl,
+  Pagination,
+  Panel,
+  PanelBlock,
+  PanelHeading,
+  PanelTab,
+  PanelTabs
 } from 'bloomer';
 import { inject, observer } from 'mobx-react';
 import React, { Component, ReactNode } from 'react';
@@ -51,6 +59,12 @@ class FindPlace extends Component<IProps> {
           {this.renderFilters()}
         </PanelTabs>
         {this.renderPlaces()}
+        <PanelBlock>
+          <Pagination>
+            <PageControl onClick={this.handlePreviousPage}>Previous</PageControl>
+            <PageControl isNext onClick={this.handleNextPage}>Next</PageControl>
+          </Pagination>
+        </PanelBlock>
       </Panel>
     );
   }
@@ -68,9 +82,16 @@ class FindPlace extends Component<IProps> {
     this.props.onSelect(id);
   }
 
+  private handleNextPage = () => {
+    this.props.places.nextPage();
+  }
+
+  private handlePreviousPage = () => {
+    this.props.places.previousPage();
+  }
+
   private renderPlaces() {
-    // TODO: we probably should render the whole list at the same time
-    return this.props.places.list.map((place: any) => {
+    return this.props.places.page.map((place: any) => {
       return (
         <PanelBlock
           key={place.id}

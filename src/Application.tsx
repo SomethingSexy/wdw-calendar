@@ -154,16 +154,15 @@ class Application extends Component<IProps, IState> {
             {renderPlanEdit(plan)}
           </ModalCardBody>
           <ModalCardFooter>
-            <Button isColor="success">Save</Button>
-            <Button isColor="warning" onClick={onClose}>Cancel</Button>
+            <Button isColor="warning" onClick={onClose}>Delete</Button>
           </ModalCardFooter>
         </ModalCard>
       </Modal>
     );
   }
 
-  private renderPlan = (plan: any) => {
-    return <Plan {...plan} />;
+  private renderPlan = (plan: any, options: any) => {
+    return <Plan {...plan} {...options} />;
   }
 
   private renderPlanEdit = (plan: any) => {

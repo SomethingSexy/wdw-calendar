@@ -34,6 +34,8 @@
     "@types/fs-extra": "^5.0.1",
     "bloomer": "^0.6.3",
     "bulma": "^0.6.2",
+    "bulma-tooltip": "^1.0.4",
+    "classnames": "^2.2.5",
     "lodash": "^4.17.5",
     "mobx": "^4.1.0",
     "mobx-react": "^5.0.0",
@@ -45,6 +47,7 @@
     "wdw-data": "github:SomethingSexy/wdw-data#v0.0.7"
   },
   "devDependencies": {
+    "@types/classnames": "^2.2.3",
     "@types/invariant": "^2.2.29",
     "@types/lodash": "^4.14.105",
     "@types/prop-types": "^15.5.2",

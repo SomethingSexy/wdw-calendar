@@ -16,7 +16,6 @@ class PlansStore {
     this.places = places;
   }
 
-  @action
   public findById(id: string) {
     return this.list.find(plan => plan.id === id);
   }

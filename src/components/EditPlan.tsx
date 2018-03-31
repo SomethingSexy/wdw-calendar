@@ -1,5 +1,5 @@
 import '@fortawesome/fontawesome-free-brands';
-// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Control, Field, Label } from 'bloomer';
 import { inject, observer } from 'mobx-react';
 import React, { Component } from 'react';
@@ -14,16 +14,32 @@ export interface IProps {
   plans?: any;
 }
 
+interface IState {
+  showEditActivity: boolean;
+}
+
 @inject('plans')
 @inject('places')
 @observer
-class EditPlan extends Component<IProps> {
+class EditPlan extends Component<IProps, IState> {
+  constructor(props: IProps) {
+    super(props);
+    this.state = {
+      showEditActivity: !props.plan.activity
+    };
+  }
+
   public componentDidMount() {
     this.props.places.fetch();
   }
 
+  public componentWillReceiveProps(nextProps: IProps) {
+    this.setState({ showEditActivity: !nextProps.plan.activity });
+  }
+
   public render() {
     const { plan, places } = this.props;
+    const show = this.state.showEditActivity;
     const { isLoading, loaded } = places;
     if (isLoading || !loaded) {
       return <div>Loading...</div>;
@@ -46,10 +62,13 @@ class EditPlan extends Component<IProps> {
           </Control>
         </Field>
         <Field>
-          <Label>Plan</Label>
+          <Label>
+            Plan
+            {place && this.renderEditActivityToggle()}
+          </Label>
           <Control>
-            {!place && <FindPlace onSelect={this.handleSelectPlan} />}
-            {place && <Placeitem {...place} />}
+            {show && <FindPlace onSelect={this.handleSelectActivity} />}
+            {!show && <Placeitem {...place} />}
           </Control>
         </Field>
       </div>
@@ -60,8 +79,20 @@ class EditPlan extends Component<IProps> {
     //
   }
 
-  private handleSelectPlan = (id: string) => {
+  private toggleEditActivity = () => {
+    this.setState({ showEditActivity: !this.state.showEditActivity });
+  }
+
+  private handleSelectActivity = (id: string) => {
     this.props.plans.updatePlanActivity(this.props.plan.id, id);
+  }
+
+  private renderEditActivityToggle() {
+    return (
+      <span onClick={this.toggleEditActivity} style={{ marginLeft: '5px', cursor: 'pointer' }}>
+        <FontAwesomeIcon icon="pencil-alt" />
+      </span>
+    );
   }
 }
 
