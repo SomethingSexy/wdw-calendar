@@ -34,7 +34,7 @@ const getIcon = (type: string) => {
 
 const renderActivity = (activity: any) => {
   if (activity) {
-    return <Tooltip isPosition="right" text={activity.name}>{getIcon(activity.type)}</Tooltip>;
+    return <Tooltip isPosition="left" text={activity.name}>{getIcon(activity.type)}</Tooltip>;
   }
 };
 
