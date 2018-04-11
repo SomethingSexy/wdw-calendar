@@ -1,5 +1,6 @@
 import Places from './places';
 import Plans from './plans';
+import Trip from './trip';
 
 export default () => {
   const places = new Places();
@@ -8,6 +9,7 @@ export default () => {
 
   return {
     places,
-    plans
+    plans,
+    trip: new Trip(plans)
   };
 };

@@ -1,0 +1,4 @@
+--require ts-node/register
+--watch-extensions tsx,ts
+--require ignore-styles
+test/**/*.ts

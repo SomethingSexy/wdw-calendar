@@ -28,7 +28,6 @@ const getIcon = (type: string) => {
 };
 
 const PlaceItem: StatelessComponent<IProps> = ({ location, name, type }) => {
-
   return (
     <Level style={{ width: '100%' }}>
       <LevelLeft>

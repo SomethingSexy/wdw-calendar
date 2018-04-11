@@ -1,7 +1,7 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "target": "ES2017",
+    "target": "es2017",
     "moduleResolution": "node",
     "pretty": true,
     "newLine": "LF",
@@ -16,5 +16,5 @@
     "experimentalDecorators": true,
     "rootDir": "./src"
   },
-  "exclude": ["node_modules", "demo", "modules"]
+  "exclude": ["node_modules", "demo", "modules", "test"]
 }

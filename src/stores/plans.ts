@@ -7,6 +7,11 @@ interface IPlan {
   id: string;
 }
 
+export interface IPlansStore {
+  list: IPlan[];
+  updateAll: (plans: IPlan[]) => void;
+}
+
 class PlansStore {
   @observable public list: IPlan[] = [];
 
@@ -48,6 +53,18 @@ class PlansStore {
       this.update({
         ...plan,
         activity
+      });
+    }
+  }
+
+  @action
+  public updatePlanDate(id: string, date: string) {
+    const plan = this.findById(id);
+
+    if (date && plan) {
+      this.update({
+        ...plan,
+        date
       });
     }
   }

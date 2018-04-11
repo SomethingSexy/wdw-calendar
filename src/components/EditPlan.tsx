@@ -56,7 +56,7 @@ class EditPlan extends Component<IProps, IState> {
               // isColor={this.state.errors.dateStart ? 'danger' : undefined}
               format="MM/DD/YYYY"
               name="dateStart"
-              onChange={this.handleChangePlan}
+              onChange={this.handleChangeDate}
               value={this.props.plan.date}
             />
           </Control>
@@ -75,8 +75,8 @@ class EditPlan extends Component<IProps, IState> {
     );
   }
 
-  private handleChangePlan = () => {
-    //
+  private handleChangeDate = ({}, value: string) => {
+    this.props.plans.updatePlanDate(this.props.plan.id, value);
   }
 
   private toggleEditActivity = () => {

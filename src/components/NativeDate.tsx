@@ -13,7 +13,7 @@ interface IProps {
   onChange: (name: string, value: string, event: any) => void;
 }
 
-export default class NativeDate extends PureComponent<IProps> {
+class NativeDate extends PureComponent<IProps> {
   private input: HTMLInputElement | null;
 
   constructor(props: IProps) {
@@ -73,9 +73,11 @@ export default class NativeDate extends PureComponent<IProps> {
   }
 
   private handleOnChange = (event: any) => {
-    const { onChange, name } = this.props;
+    const { format, onChange, name } = this.props;
     if (onChange) {
-      onChange(name, event.target.value, event);
+      onChange(name, moment(event.target.value).format(format), event);
     }
   }
 }
+
+export default NativeDate;

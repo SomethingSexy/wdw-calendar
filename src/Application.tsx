@@ -13,16 +13,18 @@ import {
   ModalCardBody,
   ModalCardFooter,
   ModalCardHeader,
-  ModalCardTitle,
-  Title
+  ModalCardTitle
+  // Title
 } from 'bloomer';
 import { toJS } from 'mobx';
 import { inject, observer } from 'mobx-react';
 import React, { Component, Fragment } from 'react';
-import { Planner } from 'react-planner';
+import { slide as Menu } from 'react-burger-menu';
+import { PlannerGrid } from 'react-planner';
 import EditPlan from './components/EditPlan';
 import Plan from './components/Plan';
-import SetttingsMenu from './Settings';
+import SetttingsMenu from './components/Settings';
+import TopNav from './components/TopNav';
 
 const helpText = `Double click to add a plan.
   Single click a plan to select it.
@@ -32,42 +34,57 @@ const helpText = `Double click to add a plan.
 
 export interface IState {
   menuOpen: boolean;
-  settings: { [key: string]: string; };
 }
 
 export interface IProps {
   plans?: any;
+  trip?: any;
 }
 
 @inject('plans')
+@inject('trip')
 @observer
 class Application extends Component<IProps, IState> {
   constructor(props: IProps) {
     super(props);
-    // TODO: Move settings out of here and into mobx
-    this.state = { menuOpen: false, settings: {} };
+    this.state = { menuOpen: false };
   }
 
   public render() {
+    const { trip } = this.props;
+    const { menuOpen } = this.state;
     return (
-      <Hero isFullHeight>
-        <HeroHeader>
-          <Container>
-            <Title tag="h1">WDW Calendar</Title>
-          </Container>
-        </HeroHeader>
-        <HeroBody style={{ paddingLeft: 0 }}>
-          <Container style={{ margin: 0 }}>
-            {this.canRenderPlanner() && this.renderPlanner()}
-            {!this.canRenderPlanner() && this.renderStart()}
-          </Container>
-        </HeroBody>
-      </Hero>
+      <Fragment>
+        <Menu isOpen={menuOpen} onStateChange={this.handleSetMenu}>
+          <SetttingsMenu
+            dateStart={trip.dateStart}
+            days={trip.days}
+            description="Existing plans will shift based on changes in settings."
+            interval={trip.interval}
+            onChangeSettings={this.handleUpdateSettings}
+            onToggle={this.handleToggleMenu}
+          />
+        </Menu>
+        <Hero isFullHeight>
+          <HeroHeader style={{ boxShadow: '0 2px 3px rgba(10,10,10,.1)' }}>
+            <TopNav
+              isSettings={this.canRenderPlanner()}
+              onToggleSettingsMenu={this.handleToggleMenu}
+            />
+          </HeroHeader>
+          <HeroBody style={{ paddingLeft: 0, paddingRight: 0 }}>
+            <Container>
+              {this.canRenderPlanner() && this.renderPlanner()}
+              {!this.canRenderPlanner() && this.renderStart()}
+            </Container>
+          </HeroBody>
+        </Hero>
+      </Fragment>
     );
   }
 
   private canRenderPlanner() {
-    if (this.state.settings.dateStart && this.state.settings.days) {
+    if (this.props.trip.dateStart && this.props.trip.days) {
       return true;
     }
 
@@ -82,9 +99,8 @@ class Application extends Component<IProps, IState> {
       <Columns>
         <Column isSize="1/2" isOffset="1/4">
           <SetttingsMenu
-            onChangeSettings={this.handleChangeSettings}
+            onChangeSettings={this.handleInitialSettings}
             onToggle={this.handleToggleMenu}
-            open
             title="Getting Started"
           />
         </Column>
@@ -93,47 +109,46 @@ class Application extends Component<IProps, IState> {
   }
 
   private renderPlanner() {
-    const { plans } = this.props;
-    const { menuOpen } = this.state;
-    const leftSize = menuOpen ? 2 : 1;
-    const rightSize = menuOpen ? 10 : 11;
+    const { plans, trip } = this.props;
+    const rightSize = 12;
     const list = toJS(plans.list);
     return (
       <Fragment>
         <Columns>
-          <Column isSize={leftSize} style={{ borderRight: '1px solid lightgray' }}>
-            <SetttingsMenu
-              {...this.state.settings}
-              onChangeSettings={this.handleChangeSettings}
-              onToggle={this.handleToggleMenu}
-              open={this.state.menuOpen}
-            />
-          </Column>
           <Column isSize={rightSize}>
-            <p>{helpText}</p>
-            <Planner
-              dateStart={this.state.settings.dateStart}
-              days={this.state.settings.days}
+            <PlannerGrid
+              dateStart={trip.dateStart}
+              days={trip.days}
               defaultPlanInterval={1}
-              interval="30m"
+              interval={trip.interval}
               plans={list}
               renderModal={this.renderModal}
               renderPlan={this.renderPlan}
               renderPlanEdit={this.renderPlanEdit}
               onUpdatePlans={this.handleUpdatePlans}
             />
+            <p><i>{helpText}</i></p>
           </Column>
         </Columns>
       </Fragment>
     );
   }
 
-  private handleChangeSettings = (settings: {}) => {
-    this.setState({ settings });
+  private handleInitialSettings = (settings: {}) => {
+    this.props.trip.set(settings);
+  }
+
+  private handleUpdateSettings = (settings: {}) => {
+    this.props.trip.update(settings);
+    this.handleToggleMenu();
   }
 
   private handleToggleMenu = () => {
     this.setState({ menuOpen: !this.state.menuOpen });
+  }
+
+  private handleSetMenu = (state: any) => {
+    this.setState({ menuOpen: state.isOpen });
   }
 
   private handleUpdatePlans = (plans: any) => {
