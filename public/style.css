@@ -11063,6 +11063,13 @@ div[tabindex="-1"]:focus {
   outline: 0;
 }
 
+/* this is within a hero for now so add back */
+.hero .tabs ul {
+  border-bottom-color: #dbdbdb;
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
+}
+
 /* react burger menu */
 /* Position and sizing of burger button */
 .bm-burger-button {

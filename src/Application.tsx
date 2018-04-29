@@ -17,6 +17,7 @@ import Modal from './components/Modal';
 import Plan from './components/Plan';
 import SetttingsMenu from './components/Settings';
 import TopNav from './components/TopNav';
+import TripNav from './components/TripNav';
 
 const helpText = `Double click to add a plan.
   Single click a plan to select it.
@@ -66,6 +67,7 @@ class Application extends Component<IProps, IState> {
           </HeroHeader>
           <HeroBody style={{ paddingLeft: 0, paddingRight: 0 }}>
             <Container>
+              {this.canRenderPlanner() && <TripNav />}
               {this.canRenderPlanner() && this.renderPlanner()}
               {!this.canRenderPlanner() && this.renderStart()}
             </Container>

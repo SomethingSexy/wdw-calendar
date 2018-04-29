@@ -26,7 +26,7 @@ const renderSettingsToggle = (onToggleSettingsMenu: () => void) => {
 const TopNav: StatelessComponent<IProps> = ({ isSettings = false, onToggleSettingsMenu }) => {
   return (
     <Container>
-      <Navbar>
+      <Navbar isSpaced>
         <NavbarBrand>
           <NavbarItem>
             WDW Planner
