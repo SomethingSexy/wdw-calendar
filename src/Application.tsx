@@ -3,18 +3,9 @@ import {
   Column,
   Columns,
   Container,
-  Delete,
   Hero,
   HeroBody,
-  HeroHeader,
-  Modal,
-  ModalBackground,
-  ModalCard,
-  ModalCardBody,
-  ModalCardFooter,
-  ModalCardHeader,
-  ModalCardTitle
-  // Title
+  HeroHeader
 } from 'bloomer';
 import { toJS } from 'mobx';
 import { inject, observer } from 'mobx-react';
@@ -22,6 +13,7 @@ import React, { Component, Fragment } from 'react';
 import { slide as Menu } from 'react-burger-menu';
 import { Calendar } from 'react-planner';
 import EditPlan from './components/EditPlan';
+import Modal from './components/Modal';
 import Plan from './components/Plan';
 import SetttingsMenu from './components/Settings';
 import TopNav from './components/TopNav';
@@ -157,21 +149,10 @@ class Application extends Component<IProps, IState> {
 
   private renderModal = (plan: {}, options: any, isOpen: boolean) => {
     const { renderPlanEdit, onClose } = options;
+    const footer = <Button isColor="warning" onClick={onClose}>Delete</Button>;
     return (
-      <Modal isActive={isOpen}>
-        <ModalBackground />
-        <ModalCard>
-          <ModalCardHeader>
-            <ModalCardTitle>Edit Plan</ModalCardTitle>
-            <Delete onClick={onClose} />
-          </ModalCardHeader>
-          <ModalCardBody>
-            {renderPlanEdit(plan)}
-          </ModalCardBody>
-          <ModalCardFooter>
-            <Button isColor="warning" onClick={onClose}>Delete</Button>
-          </ModalCardFooter>
-        </ModalCard>
+      <Modal footer={footer} isOpen={isOpen} onClose={onClose}>
+        {renderPlanEdit(plan)}
       </Modal>
     );
   }
