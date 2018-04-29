@@ -20,7 +20,7 @@ import { toJS } from 'mobx';
 import { inject, observer } from 'mobx-react';
 import React, { Component, Fragment } from 'react';
 import { slide as Menu } from 'react-burger-menu';
-import { PlannerGrid } from 'react-planner';
+import { Calendar } from 'react-planner';
 import EditPlan from './components/EditPlan';
 import Plan from './components/Plan';
 import SetttingsMenu from './components/Settings';
@@ -116,7 +116,7 @@ class Application extends Component<IProps, IState> {
       <Fragment>
         <Columns>
           <Column isSize={rightSize}>
-            <PlannerGrid
+            <Calendar
               dateStart={trip.dateStart}
               days={trip.days}
               defaultPlanInterval={1}

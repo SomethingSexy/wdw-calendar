@@ -3,6 +3,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Application from './Application';
 import Store from './stores/index';
+// import Test from './Test';
 import './theme.css';
 
 const store = Store();
