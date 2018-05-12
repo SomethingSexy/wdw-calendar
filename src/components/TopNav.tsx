@@ -25,8 +25,8 @@ const renderSettingsToggle = (onToggleSettingsMenu: () => void) => {
 
 const TopNav: StatelessComponent<IProps> = ({ isSettings = false, onToggleSettingsMenu }) => {
   return (
-    <Container>
-      <Navbar isSpaced>
+    <Navbar className="has-shadow is-spaced">
+      <Container>
         <NavbarBrand>
           <NavbarItem>
             WDW Planner
@@ -39,8 +39,8 @@ const TopNav: StatelessComponent<IProps> = ({ isSettings = false, onToggleSettin
             </NavbarItem>
           </NavbarEnd>
         </NavbarMenu>
-      </Navbar>
-    </Container>
+      </Container>
+    </Navbar>
   );
 };
 

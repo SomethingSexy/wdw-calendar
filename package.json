@@ -47,7 +47,7 @@
     "react-planner": "github:SomethingSexy/react-planner#v0.0.14",
     "react-router-dom": "^4.2.2",
     "uuid": "^3.2.1",
-    "wdw-data": "github:SomethingSexy/wdw-data#v0.0.8"
+    "wdw-data": "github:SomethingSexy/wdw-data#v0.0.9"
   },
   "devDependencies": {
     "@types/chai": "^4.1.3",

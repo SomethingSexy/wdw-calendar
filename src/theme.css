@@ -8,10 +8,24 @@ div[tabindex="-1"]:focus {
 }
 
 /* this is within a hero for now so add back */
-.hero .tabs ul {
+.tabs ul {
   border-bottom-color: #dbdbdb;
   border-bottom-style: solid;
   border-bottom-width: 1px;
+}
+
+.day .plan:hover .overlay {
+  display: block !important;
+}
+
+.fa-hover:focus, .fa-hover:hover {
+  color: #00d1b2;
+  cursor: pointer;
+}
+
+/* fixes panels that have centered text */
+.panel-block.has-text-centered {
+  display: inherit;
 }
 
 /* react burger menu */

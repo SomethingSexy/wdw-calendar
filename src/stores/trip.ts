@@ -6,6 +6,9 @@ class TripStore {
   @observable public dateStart?: string;
   @observable public days?: number;
   @observable public interval?: string;
+  @observable public name?: string;
+  @observable public range?: string[];
+  @observable public selectedDay?: string | null;
 
   private plans: IPlansStore;
 
@@ -14,10 +17,29 @@ class TripStore {
   }
 
   @action
+  public addDay() {
+    this.days = (this.days || 0) + 1;
+    this.range = range(this.dateStart, this.days);
+  }
+
+  @action
+  public addPlan(date: string) {
+    this.plans.addPlan({ date });
+  }
+
+  @action
   public set(settings: any) {
     this.dateStart = settings.dateStart;
     this.days = settings.days;
     this.interval = settings.interval;
+    this.name = settings.name;
+    this.range = range(this.dateStart, this.days);
+    this.selectedDay = this.range ? this.range[0] : null;
+  }
+
+  @action
+  public setDay(day: string) {
+    this.selectedDay = day;
   }
 
   @action
@@ -57,6 +79,9 @@ class TripStore {
     this.dateStart = dateStart;
     this.days = days;
     this.interval = interval;
+    this.name = settings.name;
+    this.range = range(this.dateStart, this.days);
+    this.selectedDay = this.range ? this.range[0] : null;
   }
 }
 

@@ -1,14 +1,11 @@
 import { action, observable } from 'mobx';
+import uuid from 'uuid';
+import { IPlan } from '../types';
 import { IPlacesStore } from './places';
-
-interface IPlan {
-  activity: any;
-  date: string;
-  id: string;
-}
 
 export interface IPlansStore {
   list: IPlan[];
+  addPlan: (plan: { date: string }) => void;
   updateAll: (plans: IPlan[]) => void;
 }
 
@@ -19,6 +16,11 @@ class PlansStore {
 
   constructor(places: IPlacesStore) {
     this.places = places;
+  }
+
+  @action
+  public addPlan(plan: { date: string }) {
+    this.list = [...this.list, { date: plan.date, id: uuid.v4() }];
   }
 
   public findById(id: string) {

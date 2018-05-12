@@ -10,7 +10,7 @@ interface IProps {
   days?: string;
   description?: string;
   interval?: string;
-  // open?: boolean;
+  name?: string;
   onChangeSettings: (settings: {}) => void;
   onToggle: () => void;
   title?: string;
@@ -22,11 +22,13 @@ interface IState {
     dateStart?: string;
     days?: string;
     interval?: string;
+    name?: string;
   };
   errors: {
     dateStart?: string;
     days?: string;
     interval?: string;
+    name?: string;
   };
 }
 
@@ -48,7 +50,8 @@ class SetttingsMenu extends PureComponent<IProps, IState> {
       settings: {
         dateStart: props.dateStart || '',
         days: props.days || '',
-        interval: props.interval || '30m'
+        interval: props.interval || '30m',
+        name: props.name || ''
       },
       errors: {}
     };
@@ -73,6 +76,18 @@ class SetttingsMenu extends PureComponent<IProps, IState> {
           {this.title}
         </Title>
         {description && <p><small>{description}</small></p>}
+        <Field>
+          <Label>Trip Name</Label>
+          <Control>
+            <Input
+              isColor={this.state.errors.name ? 'danger' : undefined}
+              name="name"
+              onChange={this.handleChangeName}
+              type="text"
+              value={this.state.settings.name}
+            />
+          </Control>
+        </Field>
         <Field>
           <Label>Start Date</Label>
           <Control>
@@ -170,6 +185,11 @@ class SetttingsMenu extends PureComponent<IProps, IState> {
   }
 
   private handleChangeInterval = (event: any) => {
+    const { name, value } = normalizeEvent(event);
+    this.setSetting(name, value);
+  }
+
+  private handleChangeName = (event: any) => {
     const { name, value } = normalizeEvent(event);
     this.setSetting(name, value);
   }

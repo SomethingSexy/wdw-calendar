@@ -24,6 +24,7 @@ interface ILocation {
 const placesQuery = `
 query PlacesQuery {
   places {
+    description,
     id,
     location,
     name,

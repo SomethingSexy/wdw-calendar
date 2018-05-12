@@ -3,20 +3,19 @@ import {
   Column,
   Columns,
   Container,
-  Hero,
-  HeroBody,
-  HeroHeader
+  Title
 } from 'bloomer';
 import { toJS } from 'mobx';
 import { inject, observer } from 'mobx-react';
 import React, { Component, Fragment } from 'react';
 import { slide as Menu } from 'react-burger-menu';
 import { Calendar } from 'react-planner';
-import EditPlan from './components/EditPlan';
+import EditPlan from './components/calendar/EditPlan';
+import Plan from './components/calendar/Plan';
 import Modal from './components/Modal';
-import Plan from './components/Plan';
 import SetttingsMenu from './components/Settings';
 import TopNav from './components/TopNav';
+import Trip from './components/Trip';
 import TripNav from './components/TripNav';
 
 const helpText = `Double click to add a plan.
@@ -27,6 +26,7 @@ const helpText = `Double click to add a plan.
 
 export interface IState {
   menuOpen: boolean;
+  tab: string;
 }
 
 export interface IProps {
@@ -40,14 +40,15 @@ export interface IProps {
 class Application extends Component<IProps, IState> {
   constructor(props: IProps) {
     super(props);
-    this.state = { menuOpen: false };
+    this.state = { menuOpen: false, tab: 'plans' };
   }
 
   public render() {
     const { trip } = this.props;
     const { menuOpen } = this.state;
+    const renderTrip = this.canRenderPlanner();
     return (
-      <Fragment>
+      <>
         <Menu isOpen={menuOpen} onStateChange={this.handleSetMenu}>
           <SetttingsMenu
             dateStart={trip.dateStart}
@@ -58,22 +59,15 @@ class Application extends Component<IProps, IState> {
             onToggle={this.handleToggleMenu}
           />
         </Menu>
-        <Hero isFullHeight>
-          <HeroHeader style={{ boxShadow: '0 2px 3px rgba(10,10,10,.1)' }}>
-            <TopNav
-              isSettings={this.canRenderPlanner()}
-              onToggleSettingsMenu={this.handleToggleMenu}
-            />
-          </HeroHeader>
-          <HeroBody style={{ paddingLeft: 0, paddingRight: 0 }}>
-            <Container>
-              {this.canRenderPlanner() && <TripNav />}
-              {this.canRenderPlanner() && this.renderPlanner()}
-              {!this.canRenderPlanner() && this.renderStart()}
-            </Container>
-          </HeroBody>
-        </Hero>
-      </Fragment>
+        <TopNav
+          isSettings={renderTrip}
+          onToggleSettingsMenu={this.handleToggleMenu}
+        />
+        <Container className="main" style={{ marginTop: '20px' }}>
+          {renderTrip && this.renderTrip()}
+          {!renderTrip && this.renderStart()}
+        </Container>
+      </>
     );
   }
 
@@ -102,7 +96,7 @@ class Application extends Component<IProps, IState> {
     );
   }
 
-  private renderPlanner() {
+  private renderCalendar() {
     const { plans, trip } = this.props;
     const rightSize = 12;
     const list = toJS(plans.list);
@@ -111,8 +105,8 @@ class Application extends Component<IProps, IState> {
         <Columns>
           <Column isSize={rightSize}>
             <Calendar
-              dateStart={trip.dateStart}
-              days={trip.days}
+              // dateStart={trip.dateStart}
+              days={trip.range}
               defaultPlanInterval={1}
               interval={trip.interval}
               plans={list}
@@ -125,6 +119,24 @@ class Application extends Component<IProps, IState> {
           </Column>
         </Columns>
       </Fragment>
+    );
+  }
+
+  private renderPlans() {
+    return <Trip />;
+    // return null;
+  }
+
+  private renderTrip() {
+    const { trip } = this.props;
+    const { tab } = this.state;
+    return (
+      <>
+        <Title isSize={2}>{trip.name}</Title>
+        <TripNav active={tab} onSelect={this.handleSelectTripTab} />
+        {tab === 'calendar' && this.renderCalendar()}
+        {tab === 'plans' && this.renderPlans()}
+      </>
     );
   }
 
@@ -143,6 +155,10 @@ class Application extends Component<IProps, IState> {
 
   private handleSetMenu = (state: any) => {
     this.setState({ menuOpen: state.isOpen });
+  }
+
+  private handleSelectTripTab = (key: string) => {
+    this.setState({ tab: key });
   }
 
   private handleUpdatePlans = (plans: any) => {
