@@ -9,6 +9,14 @@ export interface IPlansStore {
   updateAll: (plans: IPlan[]) => void;
 }
 
+// TODO: Plan should include
+// - name
+// - notes
+// - acivity -> link to place
+// - people
+// - start time, end time
+// - reservation yes/no (used for fastpass OR dining)
+//
 class PlansStore {
   @observable public list: IPlan[] = [];
 
@@ -20,6 +28,7 @@ class PlansStore {
 
   @action
   public addPlan(plan: { date: string }) {
+    // TODO: find next available time and automatially add
     this.list = [...this.list, { date: plan.date, id: uuid.v4() }];
   }
 
@@ -48,25 +57,31 @@ class PlansStore {
 
   @action
   public updatePlanActivity(id: string, activityId: string) {
-    const plan = this.findById(id);
     const activity = this.places.findById(activityId);
 
-    if (activity && plan) {
-      this.update({
-        ...plan,
-        activity
-      });
+    if (activity) {
+      this.updatePlanField(id, 'activity', activity);
+      const plan = this.findById(id);
+
+      if (plan && !plan.title) {
+        this.updatePlanField(id, 'title', activity.name);
+      }
     }
   }
 
   @action
   public updatePlanDate(id: string, date: string) {
+    this.updatePlanField(id, 'date', date);
+  }
+
+  @action
+  public updatePlanField(id: string, key: string, value: any) {
     const plan = this.findById(id);
 
-    if (date && plan) {
+    if (plan) {
       this.update({
         ...plan,
-        date
+        [key]: value
       });
     }
   }

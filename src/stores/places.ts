@@ -60,9 +60,9 @@ class PlacesStore implements IPlacesStore {
 
   @action
   public async fetch() {
-    // if (this.loaded) {
-    //   return;
-    // }
+    if (this.loaded) {
+      return;
+    }
 
     this.list = [];
     this.all = [];

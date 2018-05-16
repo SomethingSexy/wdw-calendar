@@ -9,7 +9,9 @@ import Plan from './Plan';
 
 interface IProps {
   day: string;
+  editId: string;
   onAddPlan: () => void;
+  onEditPlan: (id: string) => void;
   plans: IPlan[];
 }
 
@@ -23,8 +25,7 @@ const dayStyle = {
 
 class Day extends Component<IProps> {
   public render() {
-    const { day, plans } = this.props;
-    console.log(plans); // tslint:disable-line
+    const { day } = this.props;
     return (
       <>
         <Title isSize={4}>
@@ -36,9 +37,16 @@ class Day extends Component<IProps> {
         </span>
         </Title>
         <div className="day" style={dayStyle}>
-          {plans.map(plan => <Plan key={plan.id} plan={plan} />)}
+          {this.renderPlans()}
         </div>
       </>
+    );
+  }
+
+  private renderPlans() {
+    const { editId, onEditPlan, plans } = this.props;
+    return plans.map(plan =>
+      <Plan key={plan.id} edit={editId === plan.id} onEditPlan={onEditPlan} plan={plan} />
     );
   }
 }

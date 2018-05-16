@@ -11070,6 +11070,7 @@ div[tabindex="-1"]:focus {
   border-bottom-width: 1px;
 }
 
+.day .plan:focus .overlay,
 .day .plan:hover .overlay {
   display: block !important;
 }

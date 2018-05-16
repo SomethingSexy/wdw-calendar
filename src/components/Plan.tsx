@@ -8,16 +8,32 @@ import {
   Media,
   MediaContent,
   MediaLeft,
+  // Select
   // Subtitle,
   Title,
 } from 'bloomer';
 import * as moment from 'moment';
 import React, { Component } from 'react';
 import { IPlan } from '../types';
+import EditPlan from './EditPlan';
 
 interface IProps {
+  edit: boolean;
+  onEditPlan: (id: string) => void;
   plan: IPlan;
 }
+
+// interface IState {
+//   edit: boolean;
+//   form: {
+//     title?: string;
+//     notes?: string;
+//   };
+//   errors: {
+//     title?: string;
+//     notes?: string;
+//   };
+// }
 
 const styles = {
   button: {
@@ -45,35 +61,90 @@ const styles = {
 
 class Plan extends Component<IProps> {
   public render() {
+    const { edit } = this.props;
+    return (
+      <div className="plan" style={styles.plan}>
+        {edit && this.renderEdit()}
+        {!edit && this.renderView()}
+        {!edit && this.renderOverlay()}
+      </div>
+    );
+  }
+
+  private handleToggleEdit = () => {
+    this.props.onEditPlan(this.props.plan.id);
+  }
+
+  // private setFormValue(name: string, value: any) {
+  //   this.setState({
+  //     form: {
+  //       ...this.state.form,
+  //       [name]: value
+  //     }
+  //   });
+  // }
+
+  // private setError(name: string, error: string) {
+  //   this.setState({
+  //     errors: {
+  //       ...this.state.errors,
+  //       [name]: error
+  //     }
+  //   });
+  // }
+
+  // private removeError(name: string) {
+  //   this.setState({
+  //     errors: omit(this.state.errors, [name])
+  //   });
+  // }
+
+  private renderEdit() {
+    const { plan } = this.props;
+    return (
+      <Card style={styles.card}>
+        <CardContent>
+          <Content>
+            <EditPlan plan={plan} onClose={this.handleToggleEdit} />
+          </Content>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  private renderOverlay() {
+    return (
+      <div className="overlay" style={styles.overlayStyle}>
+        <Button style={styles.button} onClick={this.handleToggleEdit}>Edit</Button>
+        <Button>Remove</Button>
+      </div>
+    );
+  }
+
+  private renderView() {
     const { plan } = this.props;
     const { date } = plan;
     const displayDate = moment(date, 'MM/DD/YYYY').format('dddd, MMMM Do YYYY');
     return (
-      <div className="plan" style={styles.plan}>
-        <Card style={styles.card}>
-          <CardContent>
-            <Media>
-              <MediaLeft>
-                <Image isSize="48x48" src="https://via.placeholder.com/96x96" />
-              </MediaLeft>
-              <MediaContent>
-                <Title isSize={4}>New Activity!</Title>
-                {/* <Subtitle isSize={6}>@John Wick</Subtitle> */}
-              </MediaContent>
-            </Media>
-            <Content>
-              Pick something to do for this time!
-              <br/>
-              <small>{displayDate}</small>
-              {/* <small>11:09 PM - 30 October 2014</small> */}
-            </Content>
-          </CardContent>
-        </Card>
-        <div className="overlay" style={styles.overlayStyle}>
-          <Button style={styles.button}>Edit</Button>
-          <Button>Remove</Button>
-        </div>
-      </div>
+      <Card style={styles.card}>
+        <CardContent>
+          <Media>
+            <MediaLeft>
+              <Image isSize="48x48" src="https://via.placeholder.com/96x96" />
+            </MediaLeft>
+            <MediaContent>
+              <Title isSize={4}>New Activity!</Title>
+              {/* <Subtitle isSize={6}>@John Wick</Subtitle> */}
+            </MediaContent>
+          </Media>
+          <Content>
+            Pick something to do for this time!
+            <br/>
+            <small>{displayDate}</small>
+            {/* <small>11:09 PM - 30 October 2014</small> */}
+          </Content>
+        </CardContent>
+      </Card>
     );
   }
 }

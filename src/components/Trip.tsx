@@ -17,6 +17,7 @@ export interface IProps {
   places?: any;
   plans?: any;
   trip?: any;
+  ui?: any;
 }
 
 interface IState {
@@ -26,6 +27,7 @@ interface IState {
 @inject('places')
 @inject('plans')
 @inject('trip')
+@inject('ui')
 @observer
 class Trip extends Component<IProps, IState> {
   constructor(props: IProps) {
@@ -37,13 +39,15 @@ class Trip extends Component<IProps, IState> {
   }
 
   public render() {
-    const { places, trip } = this.props;
+    const { places, trip, ui } = this.props;
     const { isLoading, loaded } = places;
+
     if (isLoading || !loaded) {
       return <div>Loading...</div>;
     }
 
-    const { selectedDay, plans } = trip;
+    const { plans } = trip;
+    const { editPlanId, selectedDay } = ui;
 
     const selectedPlans = plans.list.filter((plan: IPlan) => plan.date === selectedDay);
 
@@ -69,7 +73,13 @@ class Trip extends Component<IProps, IState> {
           </Panel>
         </Column>
         <Column isSize={8}>
-          <Day day={selectedDay} onAddPlan={this.handleAddPlan} plans={selectedPlans} />
+          <Day
+            day={selectedDay}
+            editId={editPlanId}
+            onAddPlan={this.handleAddPlan}
+            onEditPlan={this.handleEditPlan}
+            plans={selectedPlans}
+          />
         </Column>
         {/* <Column isSize={4}><FindPlace onSelect={this.handleSelectDay} /></Column> */}
       </Columns>
@@ -81,15 +91,20 @@ class Trip extends Component<IProps, IState> {
   }
 
   private handleAddPlan = () => {
-    this.props.trip.addPlan(this.props.trip.selectedDay);
+    this.props.trip.addPlan(this.props.ui.selectedDay);
+  }
+
+  private handleEditPlan = (id: string) => {
+    this.props.ui.setEditPlan(id);
   }
 
   private handleSelectDay = (day: string) => {
-    this.props.trip.setDay(day);
+    this.props.ui.setSelectDay(day);
   }
 
   private renderDays() {
-    const { range, selectedDay } = this.props.trip;
+    const { range } = this.props.trip;
+    const { selectedDay } = this.props.ui;
     return range.map((day: string, index: number) => {
       return (
         <TripSelectableDay

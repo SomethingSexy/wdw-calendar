@@ -1,19 +1,23 @@
 import { action, observable } from 'mobx';
 import { range } from 'react-planner';
 import { IPlansStore } from './plans';
+import { IUiStore } from './ui';
 
+// TODO:
+//  - add support for people on this trip
 class TripStore {
   @observable public dateStart?: string;
   @observable public days?: number;
   @observable public interval?: string;
   @observable public name?: string;
   @observable public range?: string[];
-  @observable public selectedDay?: string | null;
 
   private plans: IPlansStore;
+  private ui: IUiStore;
 
-  constructor(plans: IPlansStore) {
+  constructor(plans: IPlansStore, ui: IUiStore) {
     this.plans = plans;
+    this.ui = ui;
   }
 
   @action
@@ -34,12 +38,8 @@ class TripStore {
     this.interval = settings.interval;
     this.name = settings.name;
     this.range = range(this.dateStart, this.days);
-    this.selectedDay = this.range ? this.range[0] : null;
-  }
-
-  @action
-  public setDay(day: string) {
-    this.selectedDay = day;
+    // automatically default the selected day
+    this.ui.setSelectDay(this.range ? this.range[0] : null);
   }
 
   @action
@@ -81,7 +81,8 @@ class TripStore {
     this.interval = interval;
     this.name = settings.name;
     this.range = range(this.dateStart, this.days);
-    this.selectedDay = this.range ? this.range[0] : null;
+    // for now automatically set the selected day
+    this.ui.setSelectDay(this.range ? this.range[0] : null);
   }
 }
 
