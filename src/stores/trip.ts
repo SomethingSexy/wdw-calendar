@@ -17,6 +17,7 @@ class TripStore {
 
   constructor(plans: IPlansStore, ui: IUiStore) {
     this.plans = plans;
+    // adding this here in case adjusts need to get
     this.ui = ui;
   }
 
@@ -83,6 +84,16 @@ class TripStore {
     this.range = range(this.dateStart, this.days);
     // for now automatically set the selected day
     this.ui.setSelectDay(this.range ? this.range[0] : null);
+  }
+
+  @action
+  public updatePlan(id: string, name: string, value: any) {
+    // TODO: Should I keep plans separate or should I just merge everything here?
+    const plan = this.plans.updatePlanField(id, name, value);
+
+    if (plan && plan.date !== this.ui.selectedDay) {
+      this.ui.setSelectDay(plan.date);
+    }
   }
 }
 

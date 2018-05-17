@@ -2,6 +2,7 @@ import { action, observable } from 'mobx';
 
 export interface IUiStore {
   setSelectDay: (id: string | null) => void;
+  selectedDay?: string | null;
 }
 
 class UiStore {

@@ -14,13 +14,18 @@ import {
 } from 'bloomer';
 import * as moment from 'moment';
 import React, { Component } from 'react';
-import { IPlan } from '../types';
+import { IPlan, OnUpdatePlan } from '../types';
 import EditPlan from './EditPlan';
 
 interface IProps {
   edit: boolean;
-  onEditPlan: (id: string) => void;
+  onToggleEditPlan: (id: string) => void;
+  onUpdatePlan: OnUpdatePlan;
   plan: IPlan;
+  tripSettings: {
+    min: string;
+    max: string;
+  };
 }
 
 // interface IState {
@@ -72,7 +77,7 @@ class Plan extends Component<IProps> {
   }
 
   private handleToggleEdit = () => {
-    this.props.onEditPlan(this.props.plan.id);
+    this.props.onToggleEditPlan(this.props.plan.id);
   }
 
   // private setFormValue(name: string, value: any) {
@@ -100,12 +105,17 @@ class Plan extends Component<IProps> {
   // }
 
   private renderEdit() {
-    const { plan } = this.props;
+    const { plan, onUpdatePlan, tripSettings } = this.props;
     return (
       <Card style={styles.card}>
         <CardContent>
           <Content>
-            <EditPlan plan={plan} onClose={this.handleToggleEdit} />
+            <EditPlan
+              onClose={this.handleToggleEdit}
+              onUpdatePlan={onUpdatePlan}
+              plan={plan}
+              tripSettings={tripSettings}
+            />
           </Content>
         </CardContent>
       </Card>

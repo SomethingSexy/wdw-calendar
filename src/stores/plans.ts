@@ -7,6 +7,7 @@ export interface IPlansStore {
   list: IPlan[];
   addPlan: (plan: { date: string }) => void;
   updateAll: (plans: IPlan[]) => void;
+  updatePlanField: (id: string, key: string, value: any) => IPlan | undefined;
 }
 
 // TODO: Plan should include
@@ -42,7 +43,7 @@ class PlansStore {
   }
 
   @action
-  public update(plan: IPlan) {
+  public update(plan: IPlan): IPlan {
     this.list = this.list.map(listPlan => {
       if (listPlan.id !== plan.id) {
         return listPlan;
@@ -53,6 +54,8 @@ class PlansStore {
         ...plan
       };
     });
+
+    return plan;
   }
 
   @action
@@ -70,16 +73,12 @@ class PlansStore {
   }
 
   @action
-  public updatePlanDate(id: string, date: string) {
-    this.updatePlanField(id, 'date', date);
-  }
-
-  @action
-  public updatePlanField(id: string, key: string, value: any) {
+  public updatePlanField(id: string, key: string, value: any): IPlan | undefined {
     const plan = this.findById(id);
 
     if (plan) {
-      this.update({
+      // return the plan that was updated
+      return this.update({
         ...plan,
         [key]: value
       });

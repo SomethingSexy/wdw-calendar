@@ -4,15 +4,20 @@ import {
   Title,
 } from 'bloomer';
 import React, { Component } from 'react';
-import { IPlan } from '../types';
+import { IPlan, OnUpdatePlan } from '../types';
 import Plan from './Plan';
 
 interface IProps {
   day: string;
   editId: string;
   onAddPlan: () => void;
-  onEditPlan: (id: string) => void;
+  onToggleEditPlan: (id: string) => void;
+  onUpdatePlan: OnUpdatePlan;
   plans: IPlan[];
+  tripSettings: {
+    min: string;
+    max: string;
+  };
 }
 
 const dayStyle = {
@@ -44,10 +49,17 @@ class Day extends Component<IProps> {
   }
 
   private renderPlans() {
-    const { editId, onEditPlan, plans } = this.props;
-    return plans.map(plan =>
-      <Plan key={plan.id} edit={editId === plan.id} onEditPlan={onEditPlan} plan={plan} />
-    );
+    const { editId, onToggleEditPlan, onUpdatePlan, plans, tripSettings } = this.props;
+    return plans.map(plan => (
+      <Plan
+        key={plan.id}
+        edit={editId === plan.id}
+        onToggleEditPlan={onToggleEditPlan}
+        onUpdatePlan={onUpdatePlan}
+        plan={plan}
+        tripSettings={tripSettings}
+      />
+    ));
   }
 }
 

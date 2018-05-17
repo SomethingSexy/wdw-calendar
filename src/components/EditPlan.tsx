@@ -1,8 +1,9 @@
 import '@fortawesome/fontawesome-free-brands';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Button, Control, Field, Input, Label } from 'bloomer';
+import { Button, Control, Field, Input, Label, Title } from 'bloomer';
 import { inject, observer } from 'mobx-react';
 import React, { Component } from 'react';
+import { OnUpdatePlan } from '../types';
 import { normalizeEvent } from '../utils';
 import FindPlace from './FindPlace';
 import NativeDate from './NativeDate';
@@ -13,14 +14,17 @@ export interface IProps {
   onClose: () => void;
   plan: any;
   places?: any;
-  plans?: any;
+  onUpdatePlan: OnUpdatePlan;
+  tripSettings: {
+    min: string;
+    max: string;
+  };
 }
 
 interface IState {
   showEditActivity: boolean;
 }
 
-@inject('plans')
 @inject('places')
 @observer
 class EditPlan extends Component<IProps, IState> {
@@ -40,7 +44,7 @@ class EditPlan extends Component<IProps, IState> {
   }
 
   public render() {
-    const { onClose, places, plan } = this.props;
+    const { onClose, places, plan, tripSettings } = this.props;
     const show = this.state.showEditActivity;
     const { isLoading, loaded } = places;
     if (isLoading || !loaded) {
@@ -51,6 +55,7 @@ class EditPlan extends Component<IProps, IState> {
 
     return (
       <div>
+        <Title isSize={3}>Edit Activity</Title>
         <Field>
           <Label>Title</Label>
           <Control>
@@ -81,7 +86,9 @@ class EditPlan extends Component<IProps, IState> {
             <NativeDate
               // isColor={this.state.errors.dateStart ? 'danger' : undefined}
               format="MM/DD/YYYY"
-              name="dateStart"
+              max={tripSettings.max}
+              min={tripSettings.min}
+              name="date"
               onChange={this.handleChangeDate}
               value={this.props.plan.date}
             />
@@ -108,13 +115,13 @@ class EditPlan extends Component<IProps, IState> {
     );
   }
 
-  private handleChangeDate = ({}, value: string) => {
-    this.props.plans.updatePlanDate(this.props.plan.id, value);
+  private handleChangeDate = (name: string, value: string) => {
+    this.props.onUpdatePlan(this.props.plan.id, name, value);
   }
 
   private handleChangeValue = (event: any) => {
     const { name, value } = normalizeEvent(event);
-    this.props.plans.updatePlanField(this.props.plan.id, name, value);
+    this.props.onUpdatePlan(this.props.plan.id, name, value);
   }
 
   private toggleEditActivity = () => {
@@ -122,7 +129,7 @@ class EditPlan extends Component<IProps, IState> {
   }
 
   private handleSelectActivity = (id: string) => {
-    this.props.plans.updatePlanActivity(this.props.plan.id, id);
+    this.props.onUpdatePlan(this.props.plan.id, 'activity', id);
   }
 
   private renderEditActivityToggle() {

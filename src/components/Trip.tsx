@@ -46,10 +46,15 @@ class Trip extends Component<IProps, IState> {
       return <div>Loading...</div>;
     }
 
-    const { plans } = trip;
+    const { plans, range } = trip;
     const { editPlanId, selectedDay } = ui;
 
     const selectedPlans = plans.list.filter((plan: IPlan) => plan.date === selectedDay);
+
+    const tripSettings = {
+      min: range[0],
+      max: range[range.length - 1]
+    };
 
     return (
       <Columns>
@@ -77,8 +82,10 @@ class Trip extends Component<IProps, IState> {
             day={selectedDay}
             editId={editPlanId}
             onAddPlan={this.handleAddPlan}
-            onEditPlan={this.handleEditPlan}
+            onToggleEditPlan={this.handleToggleEditPlan}
+            onUpdatePlan={this.handleUpdatePlan}
             plans={selectedPlans}
+            tripSettings={tripSettings}
           />
         </Column>
         {/* <Column isSize={4}><FindPlace onSelect={this.handleSelectDay} /></Column> */}
@@ -94,12 +101,16 @@ class Trip extends Component<IProps, IState> {
     this.props.trip.addPlan(this.props.ui.selectedDay);
   }
 
-  private handleEditPlan = (id: string) => {
+  private handleToggleEditPlan = (id: string) => {
     this.props.ui.setEditPlan(id);
   }
 
   private handleSelectDay = (day: string) => {
     this.props.ui.setSelectDay(day);
+  }
+
+  private handleUpdatePlan = (id: string, name: string, value: any) => {
+    this.props.trip.updatePlan(id, name, value);
   }
 
   private renderDays() {

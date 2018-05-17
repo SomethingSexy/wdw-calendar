@@ -5,3 +5,5 @@ export interface IPlan {
   notes?: string;
   title?: string;
 }
+
+export type OnUpdatePlan = (id: string, key: string, value: any) => void;
