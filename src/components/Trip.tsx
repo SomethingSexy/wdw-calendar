@@ -82,6 +82,8 @@ class Trip extends Component<IProps, IState> {
             day={selectedDay}
             editId={editPlanId}
             onAddPlan={this.handleAddPlan}
+            onRemoveDay={this.handleRemoveDay}
+            onRemovePlan={this.handleRemovePlan}
             onToggleEditPlan={this.handleToggleEditPlan}
             onUpdatePlan={this.handleUpdatePlan}
             plans={selectedPlans}
@@ -99,6 +101,14 @@ class Trip extends Component<IProps, IState> {
 
   private handleAddPlan = () => {
     this.props.trip.addPlan(this.props.ui.selectedDay);
+  }
+
+  private handleRemoveDay = (day: string) => {
+    this.props.trip.removeDay(day);
+  }
+
+  private handleRemovePlan = (id: string) => {
+    this.props.trip.removePlan(id);
   }
 
   private handleToggleEditPlan = (id: string) => {

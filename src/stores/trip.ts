@@ -33,6 +33,39 @@ class TripStore {
   }
 
   @action
+  public removeDay(date: string) {
+    // Removing a day will just remove all of the plans for that day
+    // then shift the days.  This might be pointless.
+    this.range = this.range ? this.range.filter(d => d !== date) : [];
+    this.days = this.days ? this.days - 1 : 0;
+
+    if (this.dateStart === date) {
+      this.dateStart = this.range[0];
+    }
+
+    if (this.ui.selectedDay === date) {
+      this.ui.setSelectDay(this.range[0]);
+    }
+
+    // also need to delete any plans associated with this date
+    const plans = this.plans.findByDate(date);
+
+    this.plans.remove(plans);
+  }
+
+  @action
+  public removePlan(id: string) {
+    const plan = this.plans.findById(id);
+
+    if (plan) {
+      if (this.ui.editPlanId === id) {
+        this.ui.setEditPlan(null);
+      }
+      this.plans.remove([plan]);
+    }
+  }
+
+  @action
   public set(settings: any) {
     this.dateStart = settings.dateStart;
     this.days = settings.days;

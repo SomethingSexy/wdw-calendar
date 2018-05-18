@@ -14,11 +14,12 @@ import {
 } from 'bloomer';
 import * as moment from 'moment';
 import React, { Component } from 'react';
-import { IPlan, OnUpdatePlan } from '../types';
+import { IPlan, OnRemovePlan, OnUpdatePlan } from '../types';
 import EditPlan from './EditPlan';
 
 interface IProps {
   edit: boolean;
+  onRemovePlan: OnRemovePlan;
   onToggleEditPlan: (id: string) => void;
   onUpdatePlan: OnUpdatePlan;
   plan: IPlan;
@@ -76,6 +77,11 @@ class Plan extends Component<IProps> {
     );
   }
 
+  private handleRemovePlan = () => {
+    const { onRemovePlan, plan } = this.props;
+    onRemovePlan(plan.id);
+  }
+
   private handleToggleEdit = () => {
     this.props.onToggleEditPlan(this.props.plan.id);
   }
@@ -126,7 +132,7 @@ class Plan extends Component<IProps> {
     return (
       <div className="overlay" style={styles.overlayStyle}>
         <Button style={styles.button} onClick={this.handleToggleEdit}>Edit</Button>
-        <Button>Remove</Button>
+        <Button onClick={this.handleRemovePlan}>Remove</Button>
       </div>
     );
   }

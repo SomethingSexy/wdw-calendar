@@ -6,6 +6,9 @@ import { IPlacesStore } from './places';
 export interface IPlansStore {
   list: IPlan[];
   addPlan: (plan: { date: string }) => void;
+  findByDate: (date: string) => IPlan[];
+  findById: (id: string) => IPlan | undefined;
+  remove: (plans: IPlan[]) => void;
   updateAll: (plans: IPlan[]) => void;
   updatePlanField: (id: string, key: string, value: any) => IPlan | undefined;
 }
@@ -33,8 +36,18 @@ class PlansStore {
     this.list = [...this.list, { date: plan.date, id: uuid.v4() }];
   }
 
-  public findById(id: string) {
+  public findById(id: string): IPlan | undefined {
     return this.list.find(plan => plan.id === id);
+  }
+
+  public findByDate(date: string): IPlan[] {
+    return this.list.filter(plan => plan.date === date);
+  }
+
+  @action
+  public remove(plans: IPlan[]) {
+    const ids = plans.map(plan => plan.id);
+    this.list = this.list.filter(plan => !ids.includes(plan.id));
   }
 
   @action

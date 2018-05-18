@@ -40,13 +40,17 @@ const filters = [{
   filter: 'attraction'
 }];
 
+const styles = {
+  panelheading: { marginBottom: 0 }
+};
+
 @inject('places')
 @observer
 class FindPlace extends Component<IProps> {
   public render() {
     return (
       <Panel>
-        <PanelHeading>Things to do...</PanelHeading>
+        <PanelHeading style={styles.panelheading}>Things to do...</PanelHeading>
         <PanelBlock>
           <Control hasIcons="left">
             <Input onChange={this.handleSearch} placeholder="Search..." />

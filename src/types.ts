@@ -7,3 +7,5 @@ export interface IPlan {
 }
 
 export type OnUpdatePlan = (id: string, key: string, value: any) => void;
+
+export type OnRemovePlan = (id: string) => void;

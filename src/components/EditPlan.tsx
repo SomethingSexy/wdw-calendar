@@ -25,6 +25,12 @@ interface IState {
   showEditActivity: boolean;
 }
 
+const styles = {
+  buttons: {
+    float: 'right' as 'right'
+  }
+};
+
 @inject('places')
 @observer
 class EditPlan extends Component<IProps, IState> {
@@ -55,7 +61,14 @@ class EditPlan extends Component<IProps, IState> {
 
     return (
       <div>
-        <Title isSize={3}>Edit Activity</Title>
+        <Title isSize={3}>
+          Edit Activity
+          <span style={styles.buttons}>
+          <Button onClick={onClose}>
+            <FontAwesomeIcon className="fa-hover" icon="times" />
+          </Button>
+        </span>
+        </Title>
         <Field>
           <Label>Title</Label>
           <Control>
