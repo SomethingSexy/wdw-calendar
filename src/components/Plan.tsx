@@ -1,10 +1,9 @@
-// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   Button,
   Card,
   CardContent,
   Content,
-  Image,
   Media,
   MediaContent,
   MediaLeft,
@@ -14,7 +13,7 @@ import {
 } from 'bloomer';
 import * as moment from 'moment';
 import React, { Component } from 'react';
-import { IPlan, OnRemovePlan, OnUpdatePlan } from '../types';
+import { IPlan, OnRemovePlan, OnUpdatePlan, PlanType } from '../types';
 import EditPlan from './EditPlan';
 
 interface IProps {
@@ -63,6 +62,14 @@ const styles = {
   plan: {
     position: 'relative' as 'relative'
   }
+};
+
+const types = {
+  [PlanType.Common]: 'infinity',
+  [PlanType.Hotel]: 'bed',
+  [PlanType.Dining]: 'utensils',
+  [PlanType.Attraction]: 'star',
+  [PlanType.Park]: ['fab', 'fort-awesome'],
 };
 
 class Plan extends Component<IProps> {
@@ -139,17 +146,18 @@ class Plan extends Component<IProps> {
 
   private renderView() {
     const { plan } = this.props;
-    const { date } = plan;
+    const { date, title, type } = plan;
     const displayDate = moment(date, 'MM/DD/YYYY').format('dddd, MMMM Do YYYY');
+    const icon: any = types[type];
     return (
       <Card style={styles.card}>
         <CardContent>
           <Media>
             <MediaLeft>
-              <Image isSize="48x48" src="https://via.placeholder.com/96x96" />
+              <FontAwesomeIcon icon={icon} />
             </MediaLeft>
             <MediaContent>
-              <Title isSize={4}>New Activity!</Title>
+              <Title isSize={4}>{title || 'New Activity!'}</Title>
               {/* <Subtitle isSize={6}>@John Wick</Subtitle> */}
             </MediaContent>
           </Media>

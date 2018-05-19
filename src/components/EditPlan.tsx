@@ -1,9 +1,9 @@
 import '@fortawesome/fontawesome-free-brands';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Button, Control, Field, Input, Label, Title } from 'bloomer';
+import { Button, Control, Field, Input, Label } from 'bloomer';
 import { inject, observer } from 'mobx-react';
 import React, { Component } from 'react';
-import { OnUpdatePlan } from '../types';
+import { IPlan, OnUpdatePlan, PlanType } from '../types';
 import { normalizeEvent } from '../utils';
 import FindPlace from './FindPlace';
 import NativeDate from './NativeDate';
@@ -12,7 +12,7 @@ import Placeitem from './PlaceItem';
 // TODO: get types here
 export interface IProps {
   onClose: () => void;
-  plan: any;
+  plan: IPlan;
   places?: any;
   onUpdatePlan: OnUpdatePlan;
   tripSettings: {
@@ -30,6 +30,28 @@ const styles = {
     float: 'right' as 'right'
   }
 };
+
+const types = [{
+  icon: 'infinity',
+  type: PlanType.Common,
+  title: 'Custom Activity'
+}, {
+  icon: 'bed',
+  type: PlanType.Hotel,
+  title: 'Hotel'
+}, {
+  icon: 'utensils',
+  type: PlanType.Dining,
+  title: 'Dining'
+}, {
+  icon: 'star',
+  type: PlanType.Attraction,
+  title: 'Attraction'
+}, {
+  icon: ['fab', 'fort-awesome'],
+  type: PlanType.Park,
+  title: 'Park'
+}];
 
 @inject('places')
 @observer
@@ -57,18 +79,16 @@ class EditPlan extends Component<IProps, IState> {
       return <div>Loading...</div>;
     }
 
-    const place = plan.activity;
+    const { activity } = plan;
 
     return (
       <div>
-        <Title isSize={3}>
-          Edit Activity
-          <span style={styles.buttons}>
+        <span style={styles.buttons}>
           <Button onClick={onClose}>
             <FontAwesomeIcon className="fa-hover" icon="times" />
           </Button>
         </span>
-        </Title>
+        {this.renderTypes()}
         <Field>
           <Label>Title</Label>
           <Control>
@@ -110,11 +130,11 @@ class EditPlan extends Component<IProps, IState> {
         <Field>
           <Label>
             Activity
-            {place && this.renderEditActivityToggle()}
+            {activity && this.renderEditActivityToggle()}
           </Label>
           <Control>
             {show && <FindPlace onSelect={this.handleSelectActivity} />}
-            {!show && <Placeitem {...place} />}
+            {!show && <Placeitem {...activity} />}
           </Control>
         </Field>
         <Field isGrouped>
@@ -137,6 +157,10 @@ class EditPlan extends Component<IProps, IState> {
     this.props.onUpdatePlan(this.props.plan.id, name, value);
   }
 
+  private handleChangeType = (type: PlanType) => {
+    this.props.onUpdatePlan(this.props.plan.id, 'type', type);
+  }
+
   private toggleEditActivity = () => {
     this.setState({ showEditActivity: !this.state.showEditActivity });
   }
@@ -151,6 +175,24 @@ class EditPlan extends Component<IProps, IState> {
         <FontAwesomeIcon icon="pencil-alt" />
       </span>
     );
+  }
+
+  private renderTypes() {
+    const { type } = this.props.plan;
+    const renderedTypes = types.map((t: any) => {
+      return (
+        <Button
+          key={t.type}
+          isActive={type === t.type}
+          onClick={() => this.handleChangeType(t.type)} // tslint:disable-line jsx-no-lambda max-line-length
+          title={t.title}
+        >
+          <FontAwesomeIcon className="fa-hover" icon={t.icon} />
+        </Button>
+      );
+    });
+
+    return <div className="buttons has-addons is-centered">{renderedTypes}</div>;
   }
 }
 

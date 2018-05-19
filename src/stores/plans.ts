@@ -1,6 +1,6 @@
 import { action, observable } from 'mobx';
 import uuid from 'uuid';
-import { IPlan } from '../types';
+import { IPlan, PlanType } from '../types';
 import { IPlacesStore } from './places';
 
 export interface IPlansStore {
@@ -33,7 +33,10 @@ class PlansStore {
   @action
   public addPlan(plan: { date: string }) {
     // TODO: find next available time and automatially add
-    this.list = [...this.list, { date: plan.date, id: uuid.v4() }];
+    this.list = [
+      ...this.list,
+      { date: plan.date, id: uuid.v4(), type: PlanType.Common }
+    ];
   }
 
   public findById(id: string): IPlan | undefined {
@@ -71,19 +74,19 @@ class PlansStore {
     return plan;
   }
 
-  @action
-  public updatePlanActivity(id: string, activityId: string) {
-    const activity = this.places.findById(activityId);
+  // @action
+  // public updatePlanActivity(id: string, activityId: string) {
+  //   const activity = this.places.findById(activityId);
 
-    if (activity) {
-      this.updatePlanField(id, 'activity', activity);
-      const plan = this.findById(id);
+  //   if (activity) {
+  //     this.updatePlanField(id, 'activity', activity);
+  //     const plan = this.findById(id);
 
-      if (plan && !plan.title) {
-        this.updatePlanField(id, 'title', activity.name);
-      }
-    }
-  }
+  //     if (plan && !plan.title) {
+  //       this.updatePlanField(id, 'title', activity.name);
+  //     }
+  //   }
+  // }
 
   @action
   public updatePlanField(id: string, key: string, value: any): IPlan | undefined {
@@ -91,6 +94,28 @@ class PlansStore {
 
     if (plan) {
       // return the plan that was updated
+      if (key === 'activity') {
+        const activity = this.places.findById(value);
+
+        if (activity) {
+          this.updatePlanField(id, 'activity', activity);
+
+          const updated = this.update({
+            ...plan,
+            activity
+          });
+
+          if (updated && !updated.title) {
+            return this.update({
+              ...plan,
+              title: activity.name
+            });
+          }
+
+          return updated;
+        }
+      }
+
       return this.update({
         ...plan,
         [key]: value
